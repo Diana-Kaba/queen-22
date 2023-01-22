@@ -122,7 +122,7 @@ function checkWin(who, card) {
     info.innerHTML = who + " win";
 
     stop();
-    //fly();
+    fly();
     return true;
   }
   return false;
@@ -134,6 +134,13 @@ function stop() {
     card_elements[i].removeEventListener("click", play);
   }
   isGame = false;
+}
+
+function fly() {
+  let card_elements = document.getElementsByClassName("card");
+  for (let i = 0; i < card_elements.length; i++) {
+    card_elements[i].classList.add("rotate");
+  }
 }
 
 window.onload = function () {
