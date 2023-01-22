@@ -38,22 +38,53 @@ function showCards(cards) {
 
 cardsField.innerHTML = showCards(cards);
 
-
-function generateCards(cards, cardsF, show) {
-    cardsF.innerHTML = "";
-    for (let i = 0; i < cards.length; i++) {
-      cardsF.innerHTML += `<div id="rc_${cards[i]}" class="card">${
-        show ? cards[i] : ""
-      }</div>`;
-    }
+function generateCards(cards, cardsF, show = false) {
+  cardsF.innerHTML = "";
+  for (let i = 0; i < cards.length; i++) {
+    cardsF.innerHTML += `<div id="rc_${cards[i]}" class="card">${
+      show ? cards[i] : ""
+    }</div>`;
   }
-
-  generateCards(cards, realCards, true);
+}
 
 function removeCard(number) {
   cards.splice(number, 1);
   cardsField.innerHTML = showCards(cards);
 }
+
+function addEventCardList() {
+  let card_elements = document.getElementsByClassName("card");
+
+  for (let i = 0; i < card_elements.length; i++) {
+    card_elements[i].addEventListener("click", play);
+  }
+}
+
+function removeCard(card) {
+  playedCards.push(card);
+  for (let i = 0; i < cards.length; i++) {
+    if (cards[i] == card) number = i;
+  }
+  cards.splice(number, 1);
+
+  cardsField.innerHTML = cards;
+
+  generateCards(cards, realCards, false);
+
+  generateCards(playedCards, playedCardsField, true);
+  addEventCardList();
+}
+
+function newPlay() {
+  location.reload();
+  return false;
+}
+
+window.onload = function () {
+  generateCards(cards, realCards, false);
+  addEventCardList();
+  rel.addEventListener("click", newPlay);
+};
 
 // function checkWin(who, card) {
 //   info.innerHTML = who + " take " + card;
@@ -103,12 +134,4 @@ function removeCard(number) {
 //   }
 // }
 
-function newPlay() {
-  location.reload();
-  return false;
-}
-
 //setCard.addEventListener("click", play.bind(this, cards));
-rel.addEventListener("click", newPlay);
-
-
