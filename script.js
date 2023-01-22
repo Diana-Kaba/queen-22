@@ -80,58 +80,64 @@ function newPlay() {
   return false;
 }
 
+function play(event) {
+  if (!isGame) return;
+  let el = event.target;
+  let elId = el.id;
+  try {
+    if (myMove(elId)) return;
+    setTimeout(computerMove, 2000);
+  } catch (ex) {
+    info.innerHTML = ex.message;
+  }
+}
+
+function myMove(elId) {
+  let b = false;
+  let card = elId.substr(3);
+  if (checkWin("You ", card)) {
+    b = true;
+  } else {
+    setTimeout(removeCard.bind(null, card), 1000);
+  }
+  return b;
+}
+
+function computerMove() {
+  isGame = false;
+  let b = false;
+  number = Math.floor(Math.random() * cards.length);
+  let card = cards[number];
+  if (checkWin("I ", card)) {
+    b = true;
+  }
+  setTimeout(removeCard.bind(null, card), 1000);
+  isGame = true;
+  return b;
+}
+
+function checkWin(who, card) {
+  info.innerHTML = who + " take " + card;
+  if (card == "Q") {
+    info.innerHTML = who + " win";
+
+    stop();
+    //fly();
+    return true;
+  }
+  return false;
+}
+
+function stop() {
+  let card_elements = document.getElementsByClassName("card");
+  for (let i = 0; i < card_elements.length; i++) {
+    card_elements[i].removeEventListener("click", play);
+  }
+  isGame = false;
+}
+
 window.onload = function () {
   generateCards(cards, realCards, false);
   addEventCardList();
   rel.addEventListener("click", newPlay);
 };
-
-// function checkWin(who, card) {
-//   info.innerHTML = who + " take " + card;
-//   if (card == "Q") {
-//     info.innerHTML = who + " win";
-//     setCard.removeEventListener("click", play);
-//     setCard.disabled = true;
-//     return true;
-//   }
-//   return false;
-// }
-
-// function myMove() {
-//   let b = false;
-//   number = cardNumber.value;
-//   if (number > cards.length || number < 0) {
-//     throw new Error("Input error! Try again!");
-//   }
-//   if (checkWin("You ", cards[number])) {
-//     b = true;
-//   }
-//   //removeCard(number);
-
-//   setTimeout(removeCard.bind(null, number), 1000);
-//   return b;
-// }
-
-// function computerMove() {
-//   let b = false;
-//   number = Math.floor(Math.random(cards.length) + 1);
-//   if (checkWin("I ", cards[number])) {
-//     b = true;
-//   }
-//   // removeCard(number);
-
-//   setTimeout(removeCard.bind(null, number), 1000);
-//   return b;
-// }
-
-// function play(cards) {
-//   try {
-//     if (myMove()) return;
-//     setTimeout(computerMove, 2000);
-//   } catch (ex) {
-//     info.innerHTML = ex.message;
-//     //myMove();
-//   }
-// }
-
-//setCard.addEventListener("click", play.bind(this, cards));
