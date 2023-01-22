@@ -25,7 +25,72 @@ function shuffle(arr) {
 
 shuffle(cards);
 
-cardsField.innerHTML = cards;
+function showCards(cards) {
+  return cards.join(", ");
+}
+
+cardsField.innerHTML = showCards(cards);
+
+function removeCard(number) {
+  cards.splice(number, 1);
+  cardsField.innerHTML = showCards(cards);
+}
+
+function checkWin(who, card) {
+  info.innerHTML = who + " take " + card;
+  if (card == "Q") {
+    info.innerHTML = who + " win";
+    setCard.removeEventListener("click", play);
+    setCard.disabled = true;
+    return true;
+  }
+  return false;
+}
+
+function myMove() {
+  let b = false;
+  number = cardNumber.value;
+  if (number > cards.length || number < 0) {
+    throw new Error("Input error! Try again!");
+  }
+  if (checkWin("You ", cards[number])) {
+    b = true;
+  }
+  //removeCard(number);
+
+  setTimeout(removeCard.bind(null, number), 1000);
+  return b;
+}
+
+function computerMove() {
+  let b = false;
+  number = Math.floor(Math.random(cards.length) + 1);
+  if (checkWin("I ", cards[number])) {
+    b = true;
+  }
+  // removeCard(number);
+
+  setTimeout(removeCard.bind(null, number), 1000);
+  return b;
+}
+
+function play(cards) {
+  try {
+    if (myMove()) return;
+    setTimeout(computerMove, 2000);
+  } catch (ex) {
+    info.innerHTML = ex.message;
+    //myMove();
+  }
+}
+
+function newPlay() {
+  location.reload();
+  return false;
+}
+
+setCard.addEventListener("click", play.bind(this, cards));
+rel.addEventListener("click", newPlay);
 
 // alert(cards);
 
